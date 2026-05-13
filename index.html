@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TypeForge — Typing Speed Test</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body class="theme-dark">
+
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-bracket">[</span>
+        <span class="logo-text">TypeForge</span>
+        <span class="logo-bracket">]</span>
+        <span class="logo-version">v2.0</span>
+      </div>
+      <div class="header-controls">
+        <div class="control-group">
+          <span class="control-label">DIFFICULTY</span>
+          <div class="btn-group" role="group" aria-label="Difficulty level">
+            <button class="btn-chip active" data-difficulty="easy">Easy</button>
+            <button class="btn-chip" data-difficulty="medium">Medium</button>
+            <button class="btn-chip" data-difficulty="hard">Hard</button>
+          </div>
+        </div>
+        <div class="control-group">
+          <span class="control-label">TIME</span>
+          <div class="btn-group" role="group" aria-label="Test duration">
+            <button class="btn-chip" data-time="15">15s</button>
+            <button class="btn-chip active" data-time="30">30s</button>
+            <button class="btn-chip" data-time="60">60s</button>
+          </div>
+        </div>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light theme" title="Toggle theme">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <!-- Stats Row -->
+    <section class="stats-row" aria-label="Live statistics">
+      <div class="stat-card">
+        <div class="stat-value" id="liveWpm">0</div>
+        <div class="stat-label">WPM</div>
+        <div class="stat-bar"><div class="stat-bar-fill" id="wpmBarFill"></div></div>
+      </div>
+      <div class="stat-card timer-card">
+        <svg class="timer-ring" viewBox="0 0 80 80" aria-hidden="true">
+          <circle class="ring-bg" cx="40" cy="40" r="35"/>
+          <circle class="ring-progress" id="timerRing" cx="40" cy="40" r="35"/>
+        </svg>
+        <div class="timer-inner">
+          <div class="stat-value" id="timerDisplay">30</div>
+          <div class="stat-label">SEC</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="liveAcc">100<span class="stat-unit">%</span></div>
+        <div class="stat-label">ACCURACY</div>
+        <div class="stat-bar"><div class="stat-bar-fill acc-fill" id="accBarFill"></div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="liveCpm">0</div>
+        <div class="stat-label">CPM</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">
+          <span class="char-ok" id="liveCorrect">0</span><span class="char-sep">/</span><span class="char-err" id="liveWrong">0</span>
+        </div>
+        <div class="stat-label">✓ / ✗</div>
+      </div>
+    </section>
+
+    <!-- Typing Container -->
+    <section class="typing-container">
+      <div class="typing-status-bar">
+        <div class="status-dot" id="statusDot"></div>
+        <span class="status-text" id="statusText">Click below and start typing…</span>
+        <button class="refresh-btn" id="refreshQuote" title="New text" aria-label="Load new text">↻</button>
+      </div>
+
+      <div class="text-display" id="textDisplay" aria-live="polite"></div>
+
+      <input
+        type="text"
+        class="hidden-input"
+        id="typingInput"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        aria-label="Typing input — type the text shown above"
+      />
+
+      <div class="focus-overlay" id="focusOverlay" tabindex="0" role="button" aria-label="Click to start typing">
+        <div class="focus-prompt">
+          <span class="focus-icon">⌨</span>
+          <span>Click to focus & type</span>
+        </div>
+      </div>
+
+      <div class="progress-track" aria-hidden="true">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </section>
+
+    <!-- Controls -->
+    <div class="test-controls">
+      <button class="btn-primary" id="restartBtn">⟳ Restart</button>
+      <button class="btn-ghost" id="soundToggle" aria-label="Toggle typing sounds">
+        <span id="soundIcon">♪</span> Sound
+      </button>
+    </div>
+
+    <!-- Personal Best -->
+    <div class="best-score-row" id="bestScoreRow">
+      <span class="best-icon">🏆</span>
+      <span class="best-label">Personal Best:</span>
+      <span class="best-val" id="bestWpm">—</span>
+      <span class="best-label">WPM @</span>
+      <span class="best-val" id="bestAcc">—</span>
+      <span class="best-label">accuracy</span>
+    </div>
+
+    <!-- Heatmap -->
+    <section class="heatmap-section">
+      <div class="section-title">KEYBOARD HEATMAP <span class="section-hint">— press frequency</span></div>
+      <div class="keyboard" id="keyboard" aria-hidden="true"></div>
+    </section>
+
+  </main>
+
+  <!-- RESULTS MODAL -->
+  <div class="modal-overlay" id="resultsModal" role="dialog" aria-modal="true" aria-labelledby="resultsTitle" hidden>
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title" id="resultsTitle"><span class="modal-bracket">[</span> RESULTS <span class="modal-bracket">]</span></div>
+        <div class="modal-subtitle" id="resultSubtitle">Test Complete</div>
+      </div>
+      <div class="result-grid">
+        <div class="result-metric span2">
+          <div class="result-num" id="resultWpm">0</div>
+          <div class="result-label">Words Per Minute</div>
+        </div>
+        <div class="result-metric span2">
+          <div class="result-num green" id="resultAcc">0%</div>
+          <div class="result-label">Accuracy</div>
+        </div>
+        <div class="result-metric">
+          <div class="result-num-sm" id="resultCpm">0</div>
+          <div class="result-label">CPM</div>
+        </div>
+        <div class="result-metric">
+          <div class="result-num-sm green" id="resultCorrect">0</div>
+          <div class="result-label">Correct</div>
+        </div>
+        <div class="result-metric">
+          <div class="result-num-sm red" id="resultWrong">0</div>
+          <div class="result-label">Errors</div>
+        </div>
+        <div class="result-metric">
+          <div class="result-num-sm" id="resultTime">0s</div>
+          <div class="result-label">Time</div>
+        </div>
+      </div>
+      <div class="performance-badge" id="performanceBadge">
+        <span id="badgeIcon">🔥</span>
+        <span id="badgeText">Great job!</span>
+      </div>
+      <div class="new-best" id="newBest" hidden>🏆 New Personal Best!</div>
+      <div class="modal-actions">
+        <button class="btn-primary" id="modalRestart">⟳ Try Again</button>
+        <button class="btn-ghost" id="modalClose">✕ Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>TypeForge</span>
+      <span class="footer-sep">·</span>
+      <span>Measure. Improve. Forge.</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
