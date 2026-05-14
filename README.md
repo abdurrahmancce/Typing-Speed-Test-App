@@ -277,12 +277,14 @@ Optimized for:
 
 # 📸 Screenshots Suggestions
 
-Add screenshots here:
 
 ```markdown
-![Home UI](./screenshots/home.png)
-![Results Modal](./screenshots/results.png)
-![Heatmap](./screenshots/heatmap.png)
+![Home UI](<img width="1920" height="1058" alt="image" src="https://github.com/user-attachments/assets/1c817d1a-31d1-4c7f-903f-738232648c69" />
+)
+![Results Modal](<img width="1920" height="1058" alt="image" src="https://github.com/user-attachments/assets/264cb48b-7159-4f78-8ec7-b92387cf73dd" />
+)
+![Heatmap](<img width="1920" height="1058" alt="image" src="https://github.com/user-attachments/assets/7b96b2dc-0842-41ed-ab05-cec284b6a13d" />
+)
 ```
 
 ---
